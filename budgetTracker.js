@@ -29,6 +29,7 @@ if(
 
     //collect expenses dynamically
     for (let i = 1; i <= numberOfExpenses; i++){
+        const expenses =[];
         let expense = parseFloat(prompt(`Enter expense ${i}: `));
 
         if(
@@ -38,7 +39,11 @@ if(
             console.log(`Invalid input for expense ${i}, setting it to $0`);
             expense = 0;
         }
-        totalExpenses += expense;
+        expenses.push(expense);
+        // calculate total expenes using array
+        for (let index=0; index<expenses.length; index++){
+            totalExpenses += expenses[index];
+        }
     }
 }
 
