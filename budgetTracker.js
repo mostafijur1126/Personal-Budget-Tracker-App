@@ -1,4 +1,20 @@
 
+//function to save budget data to localstorage
+function saveBudgetToLocal(userBudget){
+localStorage.setItem("userBudget" , JSON.stringify(userBudget));
+}
+
+//function to retrieving budget data from localstorage
+function getBudgetFromLocal(){
+const savedBudget = localStorage.getItem("userBudget");
+return savedBudget ? JSON.parse(savedBudget) : null;
+}
+
+//function to clear budget data from localstorage
+function clearBudgetFromLocal(){
+localStorage.removeItem("userBudget");
+console.log('Budget data cleared from local storage.');
+}
 
 
 //Function to get user inpute
@@ -78,14 +94,14 @@ function displayResults(userBudget){
     console.log(`Net Incime After Tax: $${userBudget.netIcome}`);
     console.log(`Remaining Balance: $${userBudget.balance}(in 2025)`);
     console.log(`Savings: $${userBudget.savings}`);
-    console.log(finalStatus);
+    console.log(userBudget.finalStatus);
 
     const overspendingMessage = checkOverSpanding(userBudget);
     if (overspendingMessage){
     console.log(overspendingMessage);
     }
     console.log('Expense Breakdown:');
-    for (let index = 0; index < userBudget.expense.length; index++){
+    for (let index = 0; index < userBudget.expenses.length; index++){
         console.log(`Expense ${index + 1} : $${userBudget.expenses[index]}`);
     }
         
@@ -116,12 +132,20 @@ function calculateBudget(userBudget){
 
         //Determine the financial health status
         userBudget.finalStatus = getFinancialStatus(userBudget.savings);
+
+        saveBudgetToLocal(userBudget);
 }
 
 
 //Main function to the run the budget tracker 
 function runBudgetTracker(){
-    let userBudget = {
+    let userBudget = getBudgetFromLocal();
+
+    if(userBudget){
+        console.log('Previous Budget Data Loaded from Local Storage!');
+        displayResults(userBudget); 
+    }else{
+         userBudget = {
         userName : '',
         income : 0,
         expenses : [],
@@ -151,6 +175,10 @@ function runBudgetTracker(){
         calculateBudget(userBudget);
         displayResults(userBudget);  
     }
+
+    }
+
+   
 }
 runBudgetTracker();
 
